@@ -1,0 +1,17 @@
+Package: ClustArea
+Title: Clustered effects area level in Small Area Estimation
+Version: 0.0.0.9000
+Authors@R: 
+    person("Xin", "Wang", , "xwang14@sdsu.edu", role = c("aut", "cre"))
+Description: SAE
+License: `use_mit_license()`, `use_gpl3_license()` or friends to pick a
+    license
+Encoding: UTF-8
+Roxygen: list(markdown = TRUE)
+RoxygenNote: 7.3.2
+Imports: 
+    sae,
+    igraph,
+    Matrix,
+    dplyr,
+    magrittr
