@@ -48,7 +48,7 @@ Clust_area_mst2 <- function(dom, y, x, index_d, vardir, graph0, betam0,
   if(len_d == ncol(x))
   {
     ##### initial of others
-    deltam <- Am %*% beta_cur
+    deltam <- Hm %*% betam0
     vm <-  matrix(0, (m-1) , len_d)
 
     resids0 <- y - Xm %*% beta_cur
@@ -69,20 +69,22 @@ Clust_area_mst2 <- function(dom, y, x, index_d, vardir, graph0, betam0,
       wm <- 1/(m*nbar*(vardir + sig2_cur))
       Xmt <- t(wm * Xm)
 
-      rho <- mean(1/(vardir + sig2_cur))
+      #rho <- mean(1/(vardir + sig2_cur))
+
+      rho <- mean(1/(vardir))
 
       beta_new <- solve(Xmt %*% Xm + rho * AtA) %*% (Xmt %*% y + rho*c(as.matrix(t(deltam -  vm/rho) %*% Hm)))
       betam_new <- matrix(beta_new, m, len_d, byrow = TRUE)
 
       # update sigma_v^2
-      resids <- y -Xm %*% beta_new
+      resids_new <- y -Xm %*% beta_new
 
       lossj <- function(xx)
       {
-        lossfun2(xx, vardir, resids)
+        lossfun2(xx, vardir, resids_new)
       }
 
-      sig2_new <- optimize(lossj, interval = c(0,mean(resids^2)))$minimum
+      sig2_new <- optimize(lossj, interval = c(0,mean(resids_new^2)))$minimum
 
       Dbeta <- Hm %*% betam_new
       psim <- Dbeta + vm/rho
@@ -150,7 +152,8 @@ Clust_area_mst2 <- function(dom, y, x, index_d, vardir, graph0, betam0,
       ztz <-  solve(t(wm*z) %*% z)%*%t(wm *z)
       Qz <- Wm - Wm %*% z%*% ztz
 
-      rho <- mean(1/(vardir + sig2_cur))
+     # rho <- mean(1/(vardir + sig2_cur))
+      rho <- mean(1/(vardir))
 
       Xinv <- solve(t(Xm) %*%Qz%*% Xm + rho * AtA)
       beta_new <- Xinv %*% (t(Xm) %*% Qz %*% y + rho*c(as.matrix(t(deltam -  vm/rho) %*% Hm)))
@@ -302,6 +305,7 @@ lossfun2 <- function(sigv2, vardir, resids)
 
 
 
+#' @export
 incidentGen <- function(graph, m) {
   # return the incident matrix of a graph
   linkMatrix <- igraph::as_data_frame(graph) %>%

@@ -51,7 +51,8 @@ Est_clust_area_mst2 <- function(dom, y, x, index_d, vardir,
   out <- list(bic_df = bic_df,
               resfm = res_fm,
               cluster_estm = res_fm$cluster,
-              area_estm = area_estm)
+              area_estm = area_estm,
+              out_bic = res_bic)
 
   return(out)
 
